@@ -119,7 +119,7 @@ The debug toolbar has two settings that can be set in `settings.py`:
      off is useful when you have large template contexts, or you have template
      contexts with lazy datastructures that you don't want to be evaluated.
 
-   * `TAG`: If set, this will be the tag to which debug_toolbar will attach the 
+   * `TAG`: If set, this will be the tag to which debug_toolbar will attach the
      debug toolbar. Defaults to 'body'.
 
    Example configuration::
@@ -142,7 +142,7 @@ command.  Each ORM call that results in a database query will be beautifully
 output in the shell::
 
     $ ./manage.py debugsqlshell
-    Python 2.6.1 (r261:67515, Jul  7 2009, 23:51:51) 
+    Python 2.6.1 (r261:67515, Jul  7 2009, 23:51:51)
     [GCC 4.2.1 (Apple Inc. build 5646)] on darwin
     Type "help", "copyright", "credits" or "license" for more information.
     (InteractiveConsole)
@@ -155,14 +155,14 @@ output in the shell::
            "page_page"."description"
     FROM "page_page"
     WHERE "page_page"."id" = 1
-    
+
     >>> print p.template.name
     SELECT "page_template"."id",
            "page_template"."name",
            "page_template"."description"
     FROM "page_template"
     WHERE "page_template"."id" = 1
-    
+
     Home
     >>> ### Using select_related to avoid 2nd database call...
     >>> p = Page.objects.select_related('template').get(pk=1)
@@ -176,9 +176,26 @@ output in the shell::
     FROM "page_page"
     INNER JOIN "page_template" ON ("page_page"."template_id" = "page_template"."id")
     WHERE "page_page"."id" = 1
-    
+
     >>> print p.template.name
     Home
+
+
+@print_queries()
+================
+Sometimes running Debug Toolbar is not a viable option such as when writing AJAX
+or API processors. The following decorator is provided to help you debug queries
+within the decorated function.
+
+    @print_queries('optional_filter_regex')
+    def function_with_queries():
+        # Do something here that runs some Django queries
+        # Perhaps just wrap your page view
+
+When the function is finished, the terminal will display all queries (or each
+query containing the optional regex pattern) as well as a summary showing the
+total SQL and process time.
+
 
 TODOs and BUGS
 ==============
