@@ -5,13 +5,13 @@ views in any other way is generally not advised.
 """
 
 import os
+import hashlib
 import django.views.static
 from django.conf import settings
 from django.db import connection
 from django.http import HttpResponseBadRequest
 from django.shortcuts import render_to_response
 from django.utils import simplejson
-from django.utils.hashcompat import sha_constructor
 
 class InvalidSQLError(Exception):
     def __init__(self, value):
@@ -39,7 +39,7 @@ def sql_select(request):
     from debug_toolbar.panels.sql import reformat_sql
     sql = request.GET.get('sql', '')
     params = request.GET.get('params', '')
-    hash = sha_constructor(settings.SECRET_KEY + sql + params).hexdigest()
+    hash = hashlib.sha1(settings.SECRET_KEY + sql + params).hexdigest()
     if hash != request.GET.get('hash', ''):
         return HttpResponseBadRequest('Tamper alert') # SQL Tampering alert
     if sql.lower().strip().startswith('select'):
@@ -71,7 +71,7 @@ def sql_explain(request):
     from debug_toolbar.panels.sql import reformat_sql
     sql = request.GET.get('sql', '')
     params = request.GET.get('params', '')
-    hash = sha_constructor(settings.SECRET_KEY + sql + params).hexdigest()
+    hash = hashlib.sha1(settings.SECRET_KEY + sql + params).hexdigest()
     if hash != request.GET.get('hash', ''):
         return HttpResponseBadRequest('Tamper alert') # SQL Tampering alert
     if sql.lower().strip().startswith('select'):
@@ -111,7 +111,7 @@ def sql_profile(request):
     from debug_toolbar.panels.sql import reformat_sql
     sql = request.GET.get('sql', '')
     params = request.GET.get('params', '')
-    hash = sha_constructor(settings.SECRET_KEY + sql + params).hexdigest()
+    hash = hashlib.sha1(settings.SECRET_KEY + sql + params).hexdigest()
     if hash != request.GET.get('hash', ''):
         return HttpResponseBadRequest('Tamper alert') # SQL Tampering alert
     if sql.lower().strip().startswith('select'):
