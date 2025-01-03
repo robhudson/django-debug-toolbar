@@ -141,6 +141,10 @@ class DebugToolbar:
             # Global URLs
             urlpatterns = [
                 path("render_panel/", views.render_panel, name="render_panel"),
+                path("requests/", views.api_requests, name="api_requests"),
+                path(
+                    "request/<str:request_id>/", views.api_request, name="api_request"
+                ),
             ]
             # Per-panel URLs
             for panel_class in cls.get_panel_classes():
